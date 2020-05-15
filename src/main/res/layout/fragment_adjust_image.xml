@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    tools:context=".EditImageFragment">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="0"
+            android:background="@drawable/ic_brightness" />
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_width="10dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/brightness_text"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:layout_width="40dp"
+            android:layout_height="20dp"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_brightness"
+            android:layout_weight="0"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="0"
+            android:background="@drawable/ic_contrast" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_width="10dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/constrain_text"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:layout_width="40dp"
+            android:layout_height="20dp"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_constraint"
+            android:layout_weight="0"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_weight="0"
+            android:background="@drawable/ic_saturation" />
+
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_width="10dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:id="@+id/saturation_text"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:layout_width="40dp"
+            android:layout_height="20dp"/>
+
+        <SeekBar
+            android:id="@+id/seekbar_saturation"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

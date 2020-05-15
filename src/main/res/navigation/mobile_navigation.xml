@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.software.ProfileFit.ui.home.HomeFragment"
+        android:label=""
+        tools:layout="@layout/fragment_home" />
+
+    <action
+        android:id="@+id/nav_gallery"
+        android:label="Follow our Page" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.software.ProfileFit.ui.slideshow.SlideshowFragment"
+        android:label="Instagram"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.software.ProfileFit.ui.tools.ToolsFragment"
+        android:label="Whatsapp"
+        tools:layout="@layout/fragment_tools" />
+
+    <action
+        android:id="@+id/nav_twitter"
+        android:name="com.software.ProfileFit.ui.TwitterFra.TwitterFragment"
+        android:label="twitter"
+        tools:layout="@layout/fragment_twitter" />
+
+    <action
+        android:id="@+id/nav_send"
+        android:label="Rate Us" />
+
+</navigation>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <item
+        android:id="@+id/action_crop"
+        android:orderInCategory="99"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:title="RATE"
+        android:icon="@drawable/ic_star_white"/>
+
+    <item
+        android:id="@+id/action_open"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:title="OPEN" />
+
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="101"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:title="SAVE" />
+
+
+
+</menu>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/imgSection"
+    android:orientation="vertical"
+    android:background="@android:color/black"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Editor"
+    tools:showIn="@layout/activity_editor"
+    >
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adBannerEditor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-6822014320677335/8077825401"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </com.google.android.gms.ads.AdView>
+
+    <com.jgabrielfreitas.core.BlurImageView
+        android:id="@+id/image_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/adBannerEditor"
+        android:scaleType="centerCrop" />
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/imageViewFinal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/image_preview"
+        android:layout_alignBottom="@+id/image_preview"
+        android:layout_alignStart="@+id/image_preview"
+        android:layout_alignEnd="@+id/image_preview"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
+
+
+    <ImageView
+        android:id="@+id/border_main"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_alignTop="@+id/image_preview"
+        android:layout_alignBottom="@+id/image_preview"
+        android:layout_alignEnd="@+id/image_preview"
+        android:layout_alignStart="@+id/image_preview"
+        android:layout_height="match_parent" />
+
+
+
+    <com.software.ProfileFit.Utils.NonSwipeableViewPage
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:layout_above="@+id/tabs"
+        android:layout_marginBottom="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:tabBackground="@drawable/black"
+        app:tabGravity="fill"
+        app:tabIconTint="@android:color/background_light"
+        app:tabIndicatorColor="@android:color/holo_blue_light"
+        app:tabRippleColor="@android:color/holo_blue_light"
+        app:tabMode="scrollable"
+        app:tabTextColor="@color/browser_actions_bg_grey" />
+
+</RelativeLayout>
