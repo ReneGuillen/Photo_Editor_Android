@@ -1,17 +1,16 @@
 package com.software.ProfileFit;
 
 import android.content.Context;
-
 import com.zomato.photofilters.geometry.Point;
 import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ToneCurveSubFilter;
-
 import java.util.ArrayList;
 import java.util.List;
 
+//Adding pre-created filters from this class to apply while making a selection.
 public class PackofFilters {
 
     private PackofFilters(){
