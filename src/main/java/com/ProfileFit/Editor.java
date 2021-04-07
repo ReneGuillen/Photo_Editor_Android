@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
 import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
@@ -44,7 +43,6 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.yalantis.ucrop.UCrop;
 import com.zomato.photofilters.imageprocessors.Filter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,87 +52,51 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
-
 import com.jgabrielfreitas.core.BlurImageView;
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
-
-
 import static android.os.Environment.DIRECTORY_PICTURES;
 
+//MAIN Application Starting Point
 public class Editor extends AppCompatActivity implements FirltersListFragmentListener, EditImageFragmentListener, RatioAdapter.RatioAdapterListener, AdjustImageFragmentListener, BorderAdapter.BorderAdapterListener {
 
-    public static final int PERMISSION_PICK_IMAGE = 1000;
-
-    BlurImageView img_preview;
-    TabLayout tabLayout;
-    ViewPager viewPager;
-    CoordinatorLayout coordinatorLayout;
-    Bitmap bitmap;
-    ImageView imageView1, border_main;
-    RelativeLayout imgSection1;
-    Bitmap blurBitmap2;
-
-    boolean onebone = false;
-    boolean fourbthree = false;
-    boolean fourbfive = false;
-    boolean sixbnine = false;
-    boolean threebfour = false;
-    boolean ninebsix = false;
-
-    Bitmap colored;
-    boolean edited = false;
-
-    Bitmap backbit;
-
-    Bitmap blury;
-
-    Bitmap originalBitmap, filteredBitmap, finalBitmap;
-
-    FiltersListFragment filtersListFragment;
-    EditImageFragment editImageFragment;
-    RatioFragment ratioFragment;
-    AdjustImageFragment adjustImageFragment;
-    BorderFragment borderFragment;
-
-    RecyclerView recycler_background;
-
-    boolean name = true;
-
-    Bitmap heybit;
-    boolean crop_bit = false;
-
-    boolean primero = false;
-    boolean segundo = false;
-    boolean tercero = false;
-    Uri image_selected_uri;
-
-    int brightnessFinal = 0;
-    float saturationFinal = 1.0f;
-    float constrantFinal = 1.0f;
-
-    boolean adjusting = false;
-
-    boolean fliprule = false;
-    boolean rotaterule = false;
+    private static final int PERMISSION_PICK_IMAGE = 1000;
+    private static Uri image_selected_uri;
+    private static int brightnessFinal = 0;
+    private static float saturationFinal = 1.0f;
+    private static float constrantFinal = 1.0f;
+    private static BlurImageView img_preview;
+    private static TabLayout tabLayout;
+    private static ViewPager viewPager;
+    private static CoordinatorLayout coordinatorLayout;
+    private static Bitmap bitmap;
+    private static ImageView imageView1, border_main;
+    private static RelativeLayout imgSection1;
+    private static Bitmap originalBitmap, filteredBitmap, finalBitmap;
+    private static FiltersListFragment filtersListFragment;
+    private static EditImageFragment editImageFragment;
+    private static RatioFragment ratioFragment;
+    private static AdjustImageFragment adjustImageFragment;
+    private static BorderFragment borderFragment;
+    private static RecyclerView recycler_background;
 
     //Load native image filters lib
     static{
         System.loadLibrary("NativeImageProcessor");
     }
 
+    //Initialize all views from features availables to the main view.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("ProfileFit ");
 
-        //View
+        //Feature views.
         img_preview = (BlurImageView) findViewById(R.id.image_preview);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -144,33 +106,24 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         recycler_background = (RecyclerView) findViewById(R.id.recycler_background);
         border_main = (ImageView) findViewById(R.id.border_main);
 
-
-        AdView adView = (AdView)findViewById(R.id.adBannerEditor);
-        MobileAds.initialize(this, "ca-app-pub-6822014320677335~3807512134");
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-
-        primero = getIntent().getExtras().getBoolean("four_three");
-        segundo = getIntent().getExtras().getBoolean("four_five");
-        tercero = getIntent().getExtras().getBoolean("six_nine");
-
+        //Catch any errors when initializing the main view.
         try {
             loadImage();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //Setup view pages and tab layout.
         setupViewPager(viewPager);
         viewPager.setOffscreenPageLimit(8);
         tabLayout.setupWithViewPager(viewPager);
-
+        //Add text name to every tab available in the initial view.
         final TabLayout.Tab croptab = tabLayout.newTab().setText("CROP");
         final TabLayout.Tab fliptab = tabLayout.newTab().setText("FLIP");
         final TabLayout.Tab rotatetab = tabLayout.newTab().setText("ROTATE");
         tabLayout.addTab(croptab);
         tabLayout.addTab(fliptab);
         tabLayout.addTab(rotatetab);
-
+        //Create view and fix image set to the wrong rotation issue based on cases.
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -202,12 +155,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                         break;
                 }
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
+            //Change view when a new tab is selected on the main view.
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 switch (tab.getPosition()){
@@ -239,7 +187,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                 }
             }
         });
-
+        //Adding icons to every tabe to make the UI better.
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_filter);
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_background);
         tabLayout.getTabAt(3).setIcon(R.drawable.ic_ratio);
@@ -248,43 +196,33 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         tabLayout.getTabAt(5).setIcon(R.drawable.ic_crop);
         tabLayout.getTabAt(6).setIcon(R.drawable.ic_flip);
         tabLayout.getTabAt(7).setIcon(R.drawable.ic_rotate);
-
-
-        Boolean hello = getIntent().getExtras().getBoolean("open_crop");
-
-        if (hello){
-            startCrop(image_selected_uri);
-            Toast.makeText(this, "Crop Opened", Toast.LENGTH_SHORT).show();
-        }
     }
 
-
+    //Method to load the image from user's gallery when selected.
     private void loadImage() throws IOException {
 
         Intent intent = getIntent();
         Uri u = Uri.parse(intent.getStringExtra("imageUri"));
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), u);
         Bitmap bitmap2 = rotateImageIfRequired(this, bitmap, u);
-
         image_selected_uri = Uri.parse(intent.getStringExtra("imageUri"));
-
         originalBitmap = bitmap2.copy(Bitmap.Config.ARGB_8888, true);
         filteredBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
         finalBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
         filteredBitmap = bitmap2.createScaledBitmap(originalBitmap, 1080,1080, false);
 
         //getting background blur
-        if (primero){
+        if (firstBit){
             blurBitmap2 = bitmap2.createScaledBitmap(originalBitmap, 1080,810, false);
             blurBitmap2 = BitmapUtils.blurRenderScript(this, blurBitmap2, 25);
             img_preview.setImageBitmap(blurBitmap2);
         }
-        else if (segundo){
+        else if (secBit){
             blurBitmap2 = bitmap2.createScaledBitmap(originalBitmap, 1024,1280, false);
             blurBitmap2 = BitmapUtils.blurRenderScript(this, blurBitmap2, 25);
             img_preview.setImageBitmap(blurBitmap2);
         }
-        else if (tercero) {
+        else if (ThirdBit) {
             blurBitmap2 = bitmap2.createScaledBitmap(originalBitmap, 1080,608, false);
             blurBitmap2 = BitmapUtils.blurRenderScript(this, blurBitmap2, 25);
             img_preview.setImageBitmap(blurBitmap2);
@@ -294,15 +232,11 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             blurBitmap2 = BitmapUtils.blurRenderScript(this, blurBitmap2, 25);
             img_preview.setImageBitmap(blurBitmap2);
         }
+        //Finally set the image on the new view.
         imageView1.setImageBitmap(originalBitmap);
-
-        //Render selected img thumbnail
-        //filtersListFragment = FiltersListFragment.getInstance(originalBitmap);
-        //filtersListFragment.setListener(this);
-
-
     }
 
+    //Method to initialize and set the view pages.
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -320,249 +254,149 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
 
         borderFragment = new BorderFragment();
         borderFragment.setListener(this);
-
+        
+        //Set every adaptar to all availabe fragments in the main view.
         adapter.addFragment(editImageFragment, "COLORS");
         adapter.addFragment(filtersListFragment, "FILTERS");
         adapter.addFragment(ratioFragment, "RATIO");
         adapter.addFragment(adjustImageFragment, "TUNE");
         adapter.addFragment(borderFragment, "Border");
-
-
         viewPager.setAdapter(adapter);
 
     }
 
+    //Method to add background and selecting new tabs.
     @Override
     public void onAddBackground(int background) {
-
+        //Make sure to keep all previous selection on original image to add a new background.
         Bitmap blury = originalBitmap.copy(Bitmap.Config.ARGB_8888,true);
         Bitmap bitmap3 = BitmapUtils.decodeSampledBitmapFromResource(getResources(),background,100,100);
         Bitmap white = BitmapUtils.decodeSampledBitmapFromResource(getResources(),R.drawable.black, 100,100);
-
+        //Make the new changes depending on previous selections.
         if(bitmap3 != null){
             if (background == R.drawable.grey3){
                 if (onebone){
-
                     blury = bitmap.createScaledBitmap(blury, 1080,1080, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else if (fourbthree || primero){
-
                     blury = bitmap.createScaledBitmap(blury, 1080,810, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else if (fourbfive || segundo){
-
                     blury = bitmap.createScaledBitmap(blury, 1024,1280, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else if(sixbnine || tercero) {
-
                     blury = bitmap.createScaledBitmap(blury, 1080,608, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else if(threebfour) {
-
                     blury = bitmap.createScaledBitmap(blury, 1080,1280, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else if(ninebsix) {
-
                     blury = bitmap.createScaledBitmap(blury, 1040,1280, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
                 else{
                     blury = bitmap.createScaledBitmap(blury, 1080,1080, false);
                     blury = BitmapUtils.blurRenderScript(this, blury, 25);
                     img_preview.setImageBitmap(blury);
-
-                    edited = false;
-                    name = true;
                 }
-
-
 
             }
             else if (background == R.drawable.negro_conbor){
                 if (onebone){
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1080,1080,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if (fourbthree || primero){
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1080,810,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if (fourbfive || segundo){
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1024,1280,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if(sixbnine || tercero) {
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1080,608,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if(threebfour) {
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1080,1280,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
 
-                    name = false;
                 }
                 else if(ninebsix) {
-
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1040,1280,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else{
                     Bitmap white1 = Bitmap.createScaledBitmap(white, 1080,1080,false);
                     img_preview.setImageBitmap(white1);
-
                     colored = white1.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
 
             }
             else {
                 if (onebone){
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1080,1080, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if (fourbthree || primero){
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1080,810, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if (fourbfive || segundo){
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1024,1280, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if(sixbnine || tercero) {
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1080,608, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if(threebfour) {
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1080,1280, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else if(ninebsix) {
-
                     backbit = bitmap.createScaledBitmap(bitmap3, 1040,1280, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
                 else{
                     backbit = bitmap.createScaledBitmap(bitmap3, 1080,1080, false);
                     img_preview.setImageBitmap(backbit);
-
                     colored = backbit.copy(Bitmap.Config.ARGB_8888, true);
-                    edited = true;
-
-                    name = false;
                 }
             }
-
-
-            //finalBitmap = backbit.copy(Bitmap.Config.ARGB_8888, true);
         }
     }
 
-
+    //Handle filter selection on main view when user selects a new option for current image.
     @Override
     public void onFrilterSelected(Filter filter) {
         if(adjusting) {
             resetControl();
         }
-
         if (crop_bit){
             finalBitmap = heybit.copy(Bitmap.Config.ARGB_8888, true);
             imageView1.setImageBitmap(filter.processFilter(finalBitmap));
@@ -570,10 +404,8 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             filteredBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
             imageView1.setImageBitmap(filter.processFilter(filteredBitmap));
         }
-
         if (name){
             if (onebone){
-
                 filteredBitmap = bitmap.createScaledBitmap(filteredBitmap, 1080,1080, false);
                 blurBitmap2 = BitmapUtils.blurRenderScript(this, filteredBitmap, 25);
 
@@ -643,11 +475,13 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         return true;
     }
 
+    //Handle options on the top of the screen and add their own funtionality.
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+        //Go to app review.
         if(id == R.id.action_crop){
-
+            
             try{
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("market://details?id=" + "com.software.pictureresizer")));
@@ -657,11 +491,13 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             }
             return true;
         }
+        //Open gallery to select a new image to edit.
         if(id == R.id.action_open)
         {
             openImageFromGallery();
             return true;
         }
+        //Save the current image on user's gallery.
         if(id == R.id.action_save)
         {
             saveImageToGallery();
@@ -677,7 +513,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                 .start(Editor.this);
     }
 
-
+    //Method to save image to gallery after user has make their selection of options and want to keep the current image.
     private void saveImageToGallery() {
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -687,24 +523,10 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if(report.areAllPermissionsGranted())
                         {
-
-                            //img_preview.buildDrawingCache(true);
-                            //Bitmap background = img_preview.getDrawingCache();
-
-                            //imageView1.buildDrawingCache(true);
-                            //Bitmap foreground = imageView1.getDrawingCache();
-
                             Bitmap background = BitmapUtils.takescreenShot(img_preview);
                             Bitmap foreground = BitmapUtils.takescreenShot(imageView1);
                             Bitmap lines = BitmapUtils.takescreenShot(border_main);
-
-                            //Bitmap background = ((BitmapDrawable)img_preview.getDrawable()).getBitmap();
-                            //Bitmap foreground = ((BitmapDrawable)imageView1.getDrawable()).getBitmap();
-
-
                             Bitmap mergedBitmap = BitmapUtils.bitmapOverlayToCenter(background, foreground,lines);
-
-                            //Bitmap mergedBitmap = bitmap.createScaledBitmap(bitmap,1080,1080,false);
 
                             File path = Environment.getExternalStoragePublicDirectory(
                                     DIRECTORY_PICTURES);
@@ -713,8 +535,6 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                                 System.out.println("Making dirs");
                             }
                             String filename = new SimpleDateFormat("yyMMddHHmmss").format(Calendar.getInstance().getTime()) + "profile.jpg";
-                            //String filename = String.format("%d.jpg", System.currentTimeMillis());
-                                    //
                             File file = new File(path, filename );
                             OutputStream out;
 
@@ -746,13 +566,14 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                     @Override
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
-
                     }
                 })
                 .check();
     }
 
+    //Method to open gallery on user's phone and retrieve the image selected to the main view.
     private void openImageFromGallery() {
+        //Check if user has given permissions if now aske for them.
         Dexter.withActivity(this)
                 .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -765,12 +586,13 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                             intent.setType("image/*");
                             startActivityForResult(intent,PERMISSION_PICK_IMAGE);
                         }
+                        //If no permissions set a screen message to let the user know.
                         else {
                             Toast.makeText(Editor.this, "Permission denied!", Toast.LENGTH_SHORT).show();
                         }
 
                     }
-
+                    //Set permisions to show on screen when first propmt.
                     @Override
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
@@ -779,6 +601,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         .check();
     }
 
+    //Handle activity results and recycle unused bitmaps to save memory.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -796,12 +619,8 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             image_selected_uri = data.getData();
 
             //clear bitmap memory
-
             finalBitmap.recycle();
             filteredBitmap.recycle();
-            //originalBitmap.recycle();
-
-
 
             originalBitmap = bitmap2.copy(Bitmap.Config.ARGB_8888, true);
             finalBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true);
@@ -812,32 +631,11 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             blurBitmap2 = BitmapUtils.blurRenderScript(this, blurBitmap2, 25);
             img_preview.setImageBitmap(blurBitmap2);
 
-            //set main image
+            //rycle image bit to not waste memory.
             imageView1.setImageBitmap(originalBitmap);
             bitmap.recycle();
             bitmap2.recycle();
-
-
-            //Render selected img thumbnail
-            //filtersListFragment = FiltersListFragment.getInstance(originalBitmap);
-            //filtersListFragment.setListener(Editor.this);
-
             filtersListFragment.displayThumbnail(originalBitmap);
-
-            onebone = false;
-            fourbthree = false;
-            fourbfive = false;
-            sixbnine = false;
-            threebfour = false;
-            ninebsix = false;
-
-            primero = false;
-            segundo = false;
-            tercero = false;
-
-            edited = false;
-            crop_bit = false;
-            name = true;
 
         }
         else if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP){
@@ -852,7 +650,8 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             handleCropError(data);
         }
     }
-
+    
+    //handling the croperror if not selected correclty.
     private void handleCropError(Intent data) {
         final Throwable cropError = UCrop.getError(data);
         if(cropError != null){
@@ -863,6 +662,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         }
     }
 
+    //Method to hanlde the crop results and saves it to the bitmap.
     private void handleCropResult(Intent data) throws IOException {
         final Uri resultUri = UCrop.getOutput(data);
         if(resultUri != null){
@@ -876,8 +676,8 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         }
     }
 
+    //Method to handle and fix the error when image is first loaded and is not the right ratation.
     private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
-
         InputStream input = context.getContentResolver().openInputStream(selectedImage);
         ExifInterface ei;
         if (Build.VERSION.SDK_INT > 23)
@@ -886,7 +686,6 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             ei = new ExifInterface(selectedImage.getPath());
 
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
                 return rotateImage(img, 90);
@@ -899,6 +698,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         }
     }
 
+    //Method to rotate the image 90 degrees when selected.
     private static Bitmap rotateImage(Bitmap img, int degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
@@ -907,32 +707,16 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         return rotatedImg;
     }
 
+    //Sets new bitmap to the new ratio selected and make the changes to the image.
     @Override
     public void onRatioSelected(int ratio) {
-        if (edited){
-            blury = colored.copy(Bitmap.Config.ARGB_8888,true);
-        }else  {
-            blury = originalBitmap.copy(Bitmap.Config.ARGB_8888,true);
-        }
         Bitmap bitmap3 = BitmapUtils.decodeSampledBitmapFromResource(getResources(), ratio, 100,100);
-
         if(bitmap3 != null){
             if (ratio == R.drawable.trans_onebyone){
                 blury = bitmap.createScaledBitmap(blury, 1080,1080, false);
                 blury = BitmapUtils.blurRenderScript(this, blury, 25);
                 Toast.makeText(this, "1:1 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
-
-                onebone = true;
-                fourbthree = false;
-                fourbfive = false;
-                sixbnine = false;
-                threebfour = false;
-                ninebsix = false;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
             }
             else if (ratio == R.drawable.trans_fourbythree){
                 blury = bitmap.createScaledBitmap(blury, 1080,810, false);
@@ -940,90 +724,36 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
                 Toast.makeText(this, "4:3 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
 
-                onebone = false;
-                fourbthree = true;
-                fourbfive = false;
-                sixbnine = false;
-                threebfour = false;
-                ninebsix = false;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
-
             }
             else if (ratio == R.drawable.trans_fourbyfive){
                 blury = bitmap.createScaledBitmap(blury, 1024,1280, false);
                 blury = BitmapUtils.blurRenderScript(this, blury, 25);
                 Toast.makeText(this, "4:5 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
-
-                onebone = false;
-                fourbthree = false;
-                fourbfive = true;
-                sixbnine = false;
-                threebfour = false;
-                ninebsix = false;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
             }
             else if (ratio == R.drawable.trans_sixbynine){
                 blury = bitmap.createScaledBitmap(blury, 1080,608, false);
                 blury = BitmapUtils.blurRenderScript(this, blury, 25);
                 Toast.makeText(this, "16:9 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
-
-                onebone = false;
-                fourbthree = false;
-                fourbfive = false;
-                sixbnine = true;
-                threebfour = false;
-                ninebsix = false;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
             }
             else if (ratio == R.drawable.trans_threebyfour){
                 blury = bitmap.createScaledBitmap(blury, 1080,1280, false);
                 blury = BitmapUtils.blurRenderScript(this, blury, 25);
                 Toast.makeText(this, "3:4 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
-
-                onebone = false;
-                fourbthree = false;
-                fourbfive = false;
-                sixbnine = false;
-                threebfour = true;
-                ninebsix = false;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
             }
             else if (ratio == R.drawable.trans_ninebysix){
                 blury = bitmap.createScaledBitmap(blury, 1040,1280, false);
                 blury = BitmapUtils.blurRenderScript(this, blury, 25);
                 Toast.makeText(this, "9:16 Ratio", Toast.LENGTH_SHORT).show();
                 img_preview.setImageBitmap(blury);
-
-                onebone = false;
-                fourbthree = false;
-                fourbfive = false;
-                sixbnine = false;
-                threebfour = false;
-                ninebsix = true;
-
-                primero = false;
-                segundo = false;
-                tercero = false;
             }
 
         }
     }
 
+    //Handle brightness changes and options when onTouched.
     @Override
     public void onBrightnessChanged(int brightness) {
         if (crop_bit){
@@ -1041,6 +771,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
 
     }
 
+    //Handle Saturation changes and options when onTouched.
     @Override
     public void onSaturationChanged(float saturation) {
         if (crop_bit) {
@@ -1060,6 +791,7 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
 
     }
 
+    //Handle contrast changes and options when onTouched.
     @Override
     public void onConstrantChanged(float constrant) {
         if (crop_bit) {
@@ -1074,28 +806,26 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
             myFilter.addSubFilter(new ContrastSubFilter(constrant));
             imageView1.setImageBitmap(myFilter.processFilter(originalBitmap.copy(Bitmap.Config.ARGB_8888, true)));
         }
-
-
     }
-
+    
+    //Keep track when a new option was applied.
     @Override
     public void onEditStarted() {
         adjusting = true;
     }
 
+    //Save the selected options on main image and save on new bitmap.
     @Override
     public void onEditCompleted() {
-
         Bitmap bitmap = filteredBitmap.copy(Bitmap.Config.ARGB_8888, true);
-
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new BrightnessSubFilter(brightnessFinal));
         myFilter.addSubFilter(new SaturationSubfilter(saturationFinal));
         myFilter.addSubFilter(new ContrastSubFilter(constrantFinal));
-
         finalBitmap = myFilter.processFilter(bitmap);
     }
 
+    //Method to reset the controllers on brightness, satiration and contrast.
     private void resetControl() {
         if(adjustImageFragment != null) {
             adjustImageFragment.resetControls();
@@ -1105,10 +835,11 @@ public class Editor extends AppCompatActivity implements FirltersListFragmentLis
         constrantFinal = 1.0f;
     }
 
+    //Adding background selection as displayed image is not what is apply as background.
     @Override
     public void onBorderSelected(int border) {
-
         Bitmap bitmap_border = BitmapUtils.decodeSampledBitmapFromResource(getResources(),border,100,100);
+        //Based on user selection the right background is apply.
         if (bitmap_border != null){
             if (border == R.drawable.whitex_trans){
                 border_main.setImageDrawable(null);
