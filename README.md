@@ -1,4 +1,4 @@
-# PhotoEditor-Android-App
+# Photo_Editor (Android-App)
 
 # MOBILE APP BUILD WITH JAVA / ANDROID STUDIO
 
