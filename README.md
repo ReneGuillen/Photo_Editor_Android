@@ -1,6 +1,6 @@
-# Photo_Editor (Android-App)
+# Photo Editor Android App
 
-# MOBILE APP BUILD WITH JAVA / ANDROID STUDIO
+## Moblie App Build With Java / ANDROID STUDIO
 
 ProfileFit allows its users to edit, crop and fit any picture into the best size for all social media including Facebook, Instagram, Whatsapp and Twitter.
 
