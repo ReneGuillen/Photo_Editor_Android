@@ -14,5 +14,5 @@ Android App created with Java and Android Studio to edit pictures and provide ma
 * /Adapters - Class Adapters for views.
 * /Instances - Class Instances for app.
 
-## Find it on GOOGLE PLAY STORE!:
+## Find It On GOOGLE PLAY STORE:
 * https://play.google.com/store/apps/details?id=com.software.pictureresizer&hl=en_US
