@@ -7,7 +7,7 @@ Android App created with Java and Android Studio to edit pictures and provide ma
 * Mobile App build with Java and Android Studio.
 * Multiple features to edit, crop, apply filters, background colors, sizes and more!.
 * Offers more than 15+ filters and 30+ background colors.
-* H
+* He
 * Provides different picture sizes for Profiles, Portraits and Covers for any social media.
 
 # Directory
