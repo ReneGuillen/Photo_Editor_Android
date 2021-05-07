@@ -17,4 +17,4 @@ Android App created with Java and Android Studio to edit pictures and provide ma
 
 # Find It On GOOGLE PLAY STORE:
 * https://play.google.com/store/apps/details?id=com.software.pictureresizer&hl=en_US
-2
+
